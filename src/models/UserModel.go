@@ -114,6 +114,9 @@ func UpdateUser(u *User) (int64, error) {
 	if u.Status != 0 {
 		user["Status"] = u.Status
 	}
+	if u.Lastlogintime.Year() > 0 {
+		user["Lastlogintime"] = u.Lastlogintime
+	}
 	if len(user) == 0 {
 		return 0, errors.New("update field is empty")
 	}

@@ -5,6 +5,7 @@ import (
 	"github.com/astaxie/beego"
 	. "fjjozjn/admin/src"
 	m "fjjozjn/admin/src/models"
+	"time"
 )
 
 type MainController struct {
@@ -60,6 +61,10 @@ func (this *MainController) Login() {
 			accesslist, _ := GetAccessList(user.Id)
 			this.SetSession("accesslist", accesslist)
 			this.Rsp(true, "登录成功")
+
+			//更新最后登入时间
+			m.UpdateUser(&m.User{Id: user.Id, Lastlogintime: time.Now()})
+
 			return
 		} else {
 			this.Rsp(false, err.Error())
