@@ -1,7 +1,7 @@
 package rbac
 
 import (
-	m "github.com/beego/admin/src/models"
+	m "fjjozjn/admin/src/models"
 )
 
 type GroupController struct {

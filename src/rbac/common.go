@@ -2,8 +2,8 @@ package rbac
 
 import (
 	"github.com/astaxie/beego"
-	. "github.com/beego/admin/src"
-	m "github.com/beego/admin/src/models"
+	. "fjjozjn/admin/src"
+	m "fjjozjn/admin/src/models"
 )
 
 type CommonController struct {
