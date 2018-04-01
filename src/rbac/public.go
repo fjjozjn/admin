@@ -70,6 +70,7 @@ func (this *MainController) Login() {
 			//更新最后登入时间
 			m.UpdateUser(&m.User{Id: user.Id, Lastlogintime: time.Now()})
 
+			log.Println(beego.AppConfig.String("invoice_system_host"))
 			//给invoice系统设置session，并记录session id
 			//http://aaltd-invoice.cxm/auth/auth.php?aAdminEmail=2322289219@qq.com&aFtyName=fjjozjn&aID=2&aLogin=fjjozjn&aName=fjjozjn&aNameChi=zjn
 			resp, err := http.Get(beego.AppConfig.String("invoice_system_host") + "auth/auth.php?aAdminEmail=" + user.Email + 
