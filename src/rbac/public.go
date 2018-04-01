@@ -1,11 +1,14 @@
 package rbac
 
 import (
-	//"fmt"
 	"github.com/astaxie/beego"
 	. "fjjozjn/admin/src"
 	m "fjjozjn/admin/src/models"
 	"time"
+	"net/http"
+	"log"
+	"strconv"
+	"io/ioutil"
 )
 
 type MainController struct {
@@ -42,6 +45,8 @@ func (this *MainController) Index() {
 		this.Data["userinfo"] = userinfo
 		this.Data["groups"] = groups
 		this.Data["tree"] = &tree
+		this.Data["invoice_system_host"] = beego.AppConfig.String("invoice_system_host")
+		this.Data["invoice_system_session_id"] = this.GetSession("invoice_system_session_id")
 		if this.GetTemplatetype() != "easyui"{
 			this.Layout = this.GetTemplatetype() + "/public/layout.tpl"
 		}
@@ -64,6 +69,21 @@ func (this *MainController) Login() {
 
 			//更新最后登入时间
 			m.UpdateUser(&m.User{Id: user.Id, Lastlogintime: time.Now()})
+
+			//给invoice系统设置session，并记录session id
+			//http://aaltd-invoice.cxm/auth/auth.php?aAdminEmail=2322289219@qq.com&aFtyName=fjjozjn&aID=2&aLogin=fjjozjn&aName=fjjozjn&aNameChi=zjn
+			resp, err := http.Get(beego.AppConfig.String("invoice_system_host") + "auth/auth.php?aAdminEmail=" + user.Email + 
+				"&aFtyName=" + user.Username + "&aID=" + strconv.FormatInt(user.Id, 10) + "&aLogin=" + user.Username +
+				"&aName=" + user.Username + "&aNameChi=" + user.Nickname)
+			defer resp.Body.Close()
+			if err != nil {
+				log.Println(err)
+			}
+    		body, err := ioutil.ReadAll(resp.Body)
+    		if err != nil {
+    			log.Println(err)
+    		}
+ 			this.SetSession("invoice_system_session_id", string(body))
 
 			return
 		} else {
