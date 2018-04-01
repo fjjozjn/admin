@@ -75,12 +75,15 @@ func (this *MainController) Login() {
 			resp, err := http.Get(beego.AppConfig.String("invoice_system_host") + "auth/auth.php?aAdminEmail=" + user.Email + 
 				"&aFtyName=" + user.Username + "&aID=" + strconv.FormatInt(user.Id, 10) + "&aLogin=" + user.Username +
 				"&aName=" + user.Username + "&aNameChi=" + user.Nickname)
+			log.Println("1")
 			defer resp.Body.Close()
 			if err != nil {
+				log.Println("2")
 				log.Println(err)
 			}
     		body, err := ioutil.ReadAll(resp.Body)
     		if err != nil {
+    			log.Println("3")
     			log.Println(err)
     		}
  			this.SetSession("invoice_system_session_id", string(body))
